@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sigma Chem</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <!-- GSAP from CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <!-- Orbitron Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap" rel="stylesheet">
+  <!-- Poppins Font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            height: 100hx; /* Make the body taller to enable scrolling */
+            margin: 0;
+            overflow-x: hidden; /* Prevent horizontal scrolling */
+            background-color: #000; /* Light background color */
+        }
+        
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+        }
+        .navbar-brand, .navbar .nav-link {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: white;
+            text-decoration: none;
+        }
+        .navbar img {
+            background: transparent !important;
+        }
+        .moving-h1 {
+            position: absolute;
+            top: 50%; /* Start in the middle of the page */
+            left: 50%;
+            transform: translate(-50%, -50%);
+            opacity: 1;
+            transition: top 1s ease, opacity 1s ease;
+            font-family: "Poppins", serif;
+  font-weight: 700;
+  font-style: normal;
+  color: white;
+          }
+
+        .moving-h1.move-up {
+            top: 120px; /* Move to just below the navbar */
+            font-family: "Poppins", serif;
+  font-weight: 700;
+  font-style: normal;
+  color: white;
+          }
+
+        .main-content {
+            opacity: 0; /* Start hidden */
+            transition: opacity 1s ease; /* Fade-in transition */
+            margin-top: 80px; /* Space for the navbar */
+            position: absolute;
+        }
+
+        .main-content.visible {
+            opacity: 1; /* Fade in */
+        }
+        .container {
+    max-width: 689px;
+    margin: 50px auto;
+    padding: 20px;
+    background: none;
+    border-radius: 8px;
+    .container {
+  display: grid;
+  place-items: center;
+  height: 100vh;
+}
+
+
+}
+
+h1 {
+  font-family: "Poppins", serif;
+  font-weight: 700;
+  font-style: normal;
+  color: white;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+label {
+    display: block;
+    margin-bottom: 10px;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 500;
+    font-size: 1.5rem;
+    color: white;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"] {
+    width: 100%;
+    padding: 15px;
+    border: 5px solid white;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+button {
+    width: 100%;
+    padding: 10px;
+    background-color: none;
+    color: black;
+    border: 1px solid;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    font-size: 1.5rem;
+}
+
+button:hover {
+    background-color: #4cae4c;
+}
+
+.video-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* Ensures video fills the screen */
+            z-index: -1; /* Moves video behind other content */
+        }
+
+        /* Overlay to improve readability */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.4); /* Dark semi-transparent overlay */
+        }
+
+        /* Content on top of the video */
+        .content {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: white;
+            text-align: center;
+            font-family: Arial, sans-serif;
+        }
+    </style>
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <a class="navbar-brand" id="navbarBrand" href="main.html">SigmaChem</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" 
+            data-target="#navbarNav" aria-controls="navbarNav" 
+            aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link" href="products.html">Products</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="team.html">Meet The Team</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="careers.html">Careers</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="cart.html">
+            <img class="invert-on-hover" src="images/cart-icon.svg" alt="Cart" width="40">
+          </a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+  
+  
+    <video class="video-bg" autoplay loop muted>
+        <source src="Videos/sigmatrailer.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+
+   
+    <div class="overlay"></div>
+
+  <div class="container">
+    <h1 class="moving-h1 navbar-brand" >Wanna be a Sigma!?</h1> 
+  </div>
+  <div class="main-content navbar">
+    <div class="container col-4">
+      <h1 class="text-center" style="color: white;">Start at Sigma Chem</h1>
+    </div>
+    <div class="container col-4">
+      <form id="signup-form">
+          <div class="form-group mx-auto">
+              <label for="name" class="mx-auto">Full Name</label>
+              <input type="text" id="name" name="name" required>
+          </div>
+          <div class="form-group">
+              <label for="email">Email</label>
+              <input type="email" id="email" name="email" required>
+          </div>
+          <div class="form-group">
+              <label for="password">Password</label>
+              <input type="password" id="password" name="password" required>
+          </div>
+          <div class="form-group">
+              <label for="confirm-password">Confirm Password</label>
+              <input type="password" id="confirm-password" name="confirm-password" required>
+          </div>
+          <button type="submit">Sign Up</button>
+      </form>
+  </div>
+</div>
+  <script>
+window.onload = function() {
+    const h1 = document.querySelector('.moving-h1');
+    const mainContent = document.querySelector('.main-content');
+    
+    // Trigger the move-up effect after a short delay
+    setTimeout(() => {
+        h1.classList.add('move-up');
+        
+        // After the H1 moves up, fade in the main content
+        setTimeout(() => {
+            mainContent.classList.add('visible');
+        }, 1000); // Delay to match the H1 transition duration
+    }, 1000); // Initial delay before moving the H1
+};
+document.getElementById('signup-form').addEventListener('submit', function(event) {
+    event.preventDefault(); // Prevent the default form submission
+
+    // Get form values
+    const name = document.getElementById('name').value;
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+    const confirmPassword = document.getElementById('confirm-password').value;
+
+    // Basic validation
+    if (password !== confirmPassword) {
+        alert("Passwords do not match!");
+        return;
+    }
+
+    // Here you can handle the form submission, e.g., send data to a server
+    console.log("Form submitted:", { name, email, password });
+
+    // Optionally, reset the form
+    document.getElementById('signup-form').reset();
+});
+  </script>
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

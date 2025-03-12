@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sigma Chem - Products</title>
+  <!-- Bootstrap CSS & Google Fonts -->
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+
+  <style>
+    /* Base Styling */
+    body {
+      background-color: #000;
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+    .navbar {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 1000;
+    }
+    .navbar-brand,
+    .navbar .nav-link {
+      font-weight: 700;
+      font-size: 1.5rem;
+      color: white;
+    }
+    .navbar img {
+      background: transparent !important;
+    }
+
+    /* Row Container: Two cards per row */
+    .product-row {
+      display: flex;
+      overflow: hidden; /* Hide the non-hovered card when it moves */
+      margin-bottom: 20px; /* Space between rows */
+      gap: 20px;
+    }
+    .product-col {
+      flex: 1;
+      transition: flex 0.5s ease, transform 0.5s ease, opacity 0.5s ease;
+    }
+    /* When hovering a row, the non-hovered column slides down and fades */
+    .product-row:hover .product-col:not(:hover) {
+      transform: translateY(150%);
+      opacity: 0;
+    }
+    /* The hovered column expands to fill the row */
+    .product-col:hover {
+      flex: 1 1 100%;
+    }
+
+    /* Product Card: 1:1 Aspect Ratio */
+    .product-card {
+      width: 100%;
+      aspect-ratio: 1 / 1; /* 1:1 ratio for square cards */
+      padding: 0;
+      border: 8px solid; /* Increased border thickness */
+      border-radius: 15px;
+      overflow: hidden;
+      background-color: rgba(255, 255, 255, 0.1);
+      transition: all 0.5s ease;
+      display: flex;
+    }
+    /* Border colors and glow */
+    .left-card {
+      border-color: #00ff00;
+      box-shadow: 0 0 15px #00ff00;
+    }
+    .right-card {
+      border-color: #ff00ff;
+      box-shadow: 0 0 15px #ff00ff;
+    }
+
+    /* Media Container */
+    .media-container {
+      position: relative;
+      flex: 1;
+      height: 100%;
+      overflow: hidden;
+      margin: 0;
+      padding: 0;
+    }
+    .card-image,
+    .card-video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;  /* Fills the container completely */
+      display: block;
+      margin: 0;
+      padding: 0;
+      transition: opacity 0.5s ease;
+    }
+    .card-video {
+      position: absolute;
+      top: 0;
+      left: 0;
+      opacity: 0; /* Hidden until hover */
+    }
+    /* On hover: fade in video and fade out image */
+    .product-card:hover .card-video {
+      opacity: 1;
+    }
+    .product-card:hover .card-image {
+      opacity: 0;
+    }
+
+    /* Title Overlay */
+    .card-title-overlay {
+      position: absolute;
+      top: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0, 0, 0, 0.5);
+      color: #fff;
+      padding: 5px 10px;
+      border-radius: 5px;
+      transition: all 0.5s ease;
+      z-index: 2;
+      font-size: 1.2rem;
+    }
+    .product-card {
+  aspect-ratio: 1/1; /* Normal state */
+  /* Other styling… */
+
+}
+
+    /* On hover, the title moves to a new position */
+    .product-card:hover .card-title-overlay {
+      top: 50%;
+      left: 20px;
+      transform: translateY(-50%);
+    }
+.product-card:hover {
+  aspect-ratio: unset; /* Remove the aspect ratio on hover */
+  height: vh;       /* Make the card as tall as the viewport */
+  transition: height 0.5s ease;
+}
+    /* Description Container for Product Details */
+    .description-container {
+      width: 0;
+      overflow: hidden;
+      transition: width 0.5s ease, opacity 0.5s ease;
+      opacity: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: rgba(0, 0, 0, 0.8);
+    }
+    .product-card:hover .description-container {
+      width: 40%;
+      opacity: 1;
+    }
+    .left-card .description-container {
+      border-radius: 0 15px 15px 0;
+    }
+    .right-card .description-container {
+      border-radius: 15px 0 0 15px;
+    }
+
+    /* Card Details Styling */
+    .card-details {
+      padding: 20px;
+      color: white;
+      text-align: center;
+    }
+
+    /* Notification Styling */
+    .notification {
+      position: fixed;
+      top: 20px;
+      right: -300px; /* Hidden off-screen */
+      background: rgba(248, 246, 246, 0.9);
+      color: #000000;
+      padding: 15px 25px;
+      border-radius: 5px;
+      font-size: 1rem;
+      z-index: 1100;
+      box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+    }
+  </style>
+  <link rel="icon" type="image/jpeg" href="images/favicon.svg">
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <a class="navbar-brand" href="main.html">SigmaChem</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" 
+      aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav">
+        <li class="nav-item"><a class="nav-link" href="products.html">Products</a></li>
+        <li class="nav-item"><a class="nav-link" href="team.html">Meet The Team</a></li>
+        <li class="nav-item"><a class="nav-link" href="careers.html">Careers</a></li>
+        <li class="nav-item"><a class="nav-link" href="cart.html"><img src="images/cart-icon.svg" alt="Cart" width="40"></a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Product Cards Section -->
+  <div class="container mt-5" style="padding-top: 80px;">
+    <h2 class="text-center text-white">Our Products</h2>
+    
+    <!-- Row 1: Two Cards -->
+    <div class="product-row">
+      <!-- Column 1: Luck Bomb Kit -->
+      <div class="product-col">
+        <div class="product-card left-card">
+          <div class="media-container">
+            <img src="images/luckpotion.jpeg" alt="Luck Bomb Kit" class="card-image">
+            <video class="card-video" muted loop playsinline autoplay preload="auto">
+              <source src="videos/luckpotionvid.mp4" type="video/mp4">
+              Your browser does not support the video tag.
+            </video>
+            <div class="card-title-overlay">Luck Bomb Kit</div>
+          </div>
+          <div class="description-container">
+            <div class="card-details">
+              <p>Enhance your chances with our scientifically developed luck bomb kit!</p>
+              <p><strong>Price: $499.99</strong></p>
+              <button class="btn btn-success add-to-cart" data-product="Luck Bomb Kit" data-price="499.99">Add to Cart</button>
+              <p>In partnership with</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Column 2: Love Bomb Kit -->
+      <div class="product-col">
+        <div class="product-card right-card">
+          <div class="media-container">
+            <img src="images/lovepotion.jpeg" alt="Love Bomb Kit" class="card-image">
+            <video class="card-video" muted loop playsinline autoplay preload="auto">
+              <source src="videos/lovepotionvid.mp4" type="video/mp4">
+              Your browser does not support the video tag.
+            </video>
+            <div class="card-title-overlay">Love Bomb Kit</div>
+          </div>
+          <div class="description-container">
+            <div class="card-details">
+              <p>A powerful formula designed to bring love and attraction into your life.</p>
+              <p><strong>Price: $599.99</strong></p>
+              <button class="btn btn-success add-to-cart" data-product="Love Bomb Kit" data-price="599.99">Add to Cart</button>
+              <p>Detailed description for Love Bomb Kit goes here.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Row 2: Two Placeholder Cards -->
+    <div class="product-row">
+      <!-- Column 1: Placeholder Product -->
+      <div class="product-col">
+        <div class="product-card left-card">
+          <div class="media-container">
+            <img src="images/placeholder.jpg" alt="Placeholder Product" class="card-image">
+            <div class="card-title-overlay">Any Product</div>
+          </div>
+          <div class="description-container">
+            <div class="card-details">
+              <p>Unknown details.</p>
+              <p><strong>Price: $$$$</strong></p>
+              <button class="btn btn-success add-to-cart" data-product="Any Product" data-price="0">Add to Cart</button>
+              <p>Detailed description for the placeholder product goes here.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Column 2: Another Placeholder -->
+      <div class="product-col">
+        <div class="product-card right-card">
+          <div class="media-container">
+            <img src="images/placeholder.jpg" alt="Placeholder Product" class="card-image">
+            <div class="card-title-overlay">Another Product</div>
+          </div>
+          <div class="description-container">
+            <div class="card-details">
+              <p>Unknown details.</p>
+              <p><strong>Price: $$$$</strong></p>
+              <button class="btn btn-success add-to-cart" data-product="Another Product" data-price="0">Add to Cart</button>
+              <p>Detailed description for the second placeholder product goes here.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+  </div>
+
+  <!-- Notification Element -->
+  <div class="notification" id="notification"></div>
+
+  <!-- Bootstrap JS and dependencies -->
+  <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  
+  <!-- Cart Handling Script with Notification Animation -->
+  <script>
+    $(document).ready(function() {
+      $(".add-to-cart").click(function() {
+        var product = $(this).data("product");
+        var price = $(this).data("price");
+        var cart = localStorage.getItem("cart") ? JSON.parse(localStorage.getItem("cart")) : [];
+        var existingItem = cart.find(item => item.product === product);
+        if (existingItem) {
+          existingItem.quantity += 1;
+        } else {
+          cart.push({ product: product, price: price, quantity: 1 });
+        }
+        localStorage.setItem("cart", JSON.stringify(cart));
+
+        // Set notification text
+        $("#notification").text("Added " + product + " to cart!");
+
+        // Animate notification: slide in from top-right then slide out
+        $("#notification").css({ right: "-300px", opacity: 1, display: "block" })
+          .animate({ right: "20px" }, 500, function() {
+            // After 3 seconds, slide out
+            setTimeout(function() {
+              $("#notification").animate({ right: "-300px", opacity: 0 }, 500);
+            }, 3000);
+          });
+      });
+    });
+  </script>
+</body>
+</html>

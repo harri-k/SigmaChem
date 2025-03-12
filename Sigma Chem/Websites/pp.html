@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mockup Website</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Poppins Font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      background-color: #000;
+      color: white;
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+    /* Add top margin to ensure content doesn't hide behind the fixed navbar */
+    .content {
+      margin-top: 80px;
+      padding: 20px;
+    }
+  </style>
+</head>
+<body>
+  <!-- Include the navbar from nav.html -->
+  <?php include 'nav.html'; ?>
+  
+  <!-- Main Content -->
+  <div class="content">
+    <h1>Welcome to Our Mockup Website</h1>
+    <p>This page demonstrates a PHP include for the navbar.</p>
+    <p>
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse eget sapien vitae urna molestie sollicitudin.
+      Integer vestibulum eros euismod, porttitor nibh a, tincidunt erat. Donec sed arcu justo. Proin non quam nec urna 
+      fermentum egestas.
+    </p>
+  </div>
+  
+  <!-- Bootstrap JS and dependencies -->
+  <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sigma Chem</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <!-- GSAP from CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <!-- Orbitron Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap" rel="stylesheet">
+  <!-- Poppins Font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900&display=swap" rel="stylesheet">
+  
+  <style>
+    /* Basic Reset & Body */
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #000;
+      font-family: 'Poppins', sans-serif;
+    }
+    html {
+      scroll-behavior: smooth;
+    }
+    /* Startup element */
+    #sigmach {
+      position: absolute;
+      font-size: 4rem;
+      font-family: "Poppins", serif;
+      font-weight: 700;
+      color: white;
+      text-decoration: none;
+      opacity: 0;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 9999;
+    }
+    /* Navbar styling */
+    .navbar {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 1000;
+    }
+    .navbar-brand, .navbar .nav-link {
+      font-family: 'Poppins', sans-serif;
+      font-weight: 700;
+      font-size: 1.5rem;
+      color: white;
+      text-decoration: none;
+    }
+    .navbar img {
+      background: transparent !important;
+    }
+    #navbarBrand {
+      opacity: 0;
+    }
+    /* Page content initially hidden */
+    .page {
+      opacity: 0;
+    }
+    /* Video Container */
+    .video-container {
+      width: 100%;
+      height: 100vh;
+      overflow: hidden;
+      position: relative;
+    }
+    .video-container video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0.5;
+    }
+    /* Learn More Button */
+    #learn-more {
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: transparent;
+      border: 2px solid white;
+      color: white;
+      padding: 10px 20px;
+      font-family: 'Poppins', sans-serif;
+      font-size: 1rem;
+      border-radius: 5px;
+      cursor: pointer;
+      z-index: 1100;
+      transition: background 0.3s ease, color 0.3s ease;
+    }
+    #learn-more:hover {
+      background: white;
+      color: black;
+    }
+    /* Typewriter Heading */
+    #poppins-extrabold-italic {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 1100;
+      color: white;
+      font-style: italic;
+      font-weight: 900;
+      font-size: 50px;
+      font-family: 'Poppins', sans-serif;
+    }
+    /* Compound Section */
+    #compound-section {
+      position: relative;
+      width: 100%;
+      height: 1200px;
+      background: black;
+      overflow: hidden;
+    }
+    /* Chemical images */
+    .compound-image {
+      position: absolute;
+      width: 150px;
+      opacity: 0;
+      filter: brightness(80%) contrast(120%);
+    }
+    /* Content overlay: two boxes side by side */
+    .content-overlay {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 90%;
+      z-index: 2;
+    }
+    .left-box {
+      width: 32%;
+      background-color: rgb(0, 0, 0);
+      border: 8px solid gray;
+      padding: 30px;
+      margin-right: 2%;
+      border-radius: 30px;
+      transform: translateX(-300px);
+      opacity: 0;
+    }
+    .right-box {
+      width: 66%;
+      background-color: rgb(0, 0, 0);
+      border: 8px solid gray;
+      padding: 30px;
+      margin-left: 2%;
+      border-radius: 30px;
+      transform: translateX(300px);
+      opacity: 0;
+      font-size: x-large;
+      font-family: "Poppins",;
+      font-weight: 300;
+      color: white;
+    }
+    /* Heading spans initially hidden */
+    .left-box h1 span {
+      opacity: 0;
+      display: block;
+    }
+    /* Footer Styling */
+    .footer {
+      position: relative;
+      bottom: 0;
+      width: 100%;
+      text-align: center;
+      font-family: 'Poppins', sans-serif;
+    }
+    .footer a {
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+    .footer a:hover {
+      color: #ccc;
+    }
+    .poppins-bold {
+      font-family: "Poppins", serif;
+      font-weight: 700;
+      color: white;
+    }
+  </style>
+  <link rel="icon" type="image/jpeg" href="images/favicon.svg">
+</head>
+<body>
+  <!-- Startup Animated Element -->
+  <a id="sigmach" href="main.html">SigmaChem</a>
+  
+  <!-- Navbar with Hidden Brand Placeholder and Login Button -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark page">
+    <a class="navbar-brand" id="navbarBrand" href="main.html">SigmaChem</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" 
+            data-target="#navbarNav" aria-controls="navbarNav" 
+            aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link" href="products.html">Products</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="team.html">Meet The Team</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="careers.html">Careers</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="cart.html">
+            <img class="invert-on-hover" src="images/cart-icon.svg" alt="Cart" width="40">
+          </a>
+        </li>
+      </ul>
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="login.html">Login</a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+  
+  <!-- Video Section with Learn More Button -->
+  <div class="page video-container">
+    <video autoplay muted loop>
+      <source src="Videos/sigmatrailer.mp4" type="video/mp4">
+      Your browser does not support the video tag.
+    </video>
+    <button id="learn-more">Learn More &#x2193;</button>
+  </div>
+  
+  <!-- Typewriter Effect Heading -->
+  <h1 id="poppins-extrabold-italic"></h1>
+  
+  <!-- Compound Section -->
+  <div id="compound-section">
+    <div class="content-overlay">
+      <div class="left-box">
+        <h1 class="poppins-bold">
+          <span>Achieving</span>
+          <span>Molecular</span>
+          <span>Perfection</span>
+          <span class="delay-span">One Atom at A Time</span>
+        </h1>
+      </div>
+      <div class="right-box">
+        <p class="">
+          Sigma Chemicals stands at the forefront of scientific innovation,
+          pioneering advancements in chemical research and human potential.
+          Based in Jackson, Tennessee, our laboratories are dedicated to pushing
+          the boundaries of possibility, transforming abstract ambition into tangible reality.
+          Through rigorous experimentation, cutting-edge formulations, and an unyielding pursuit of progress,
+          we craft solutions that empower individuals to transcend the limitations of nature itself.
+        </p>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Footer -->
+  <footer class="page footer bg-dark text-white py-3">
+    <div class="container text-center">
+      <ul class="list-inline mb-0">
+        <li class="list-inline-item">
+          <a class="nav-link d-inline text-white" href="products.html">Products</a>
+        </li>
+        <li class="list-inline-item">
+          <a class="nav-link d-inline text-white" href="team.html">Meet The Team</a>
+        </li>
+        <li class="list-inline-item">
+          <a class="nav-link d-inline text-white" href="careers.html">Careers</a>
+        </li>
+      </ul>
+      <p class="mt-2 mb-0">© 2025 ΣChem. All Rights Reserved.</p>
+    </div>
+  </footer>
+  
+  <!-- Typewriter Animation Script -->
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      window.scrollTo(0, 0);
+      setTimeout(() => {
+        const text = "Take Control.™";
+        const target = document.getElementById("poppins-extrabold-italic");
+        let index = 0;
+        function typeWriter() {
+          if (index < text.length) {
+            target.textContent += text.charAt(index);
+            index++;
+            setTimeout(typeWriter, 100);
+          }
+        }
+        typeWriter();
+      }, 4000);
+    });
+  </script>
+  
+  <!-- Startup and Navbar Animation Script -->
+  <script>
+    window.addEventListener("load", () => {
+      gsap.to("#sigmach", {
+        duration: 1,
+        opacity: 1,
+        y: "-=20",
+        ease: "power2.out",
+        onComplete: moveToNavbar
+      });
+      function moveToNavbar() {
+        const brandPlaceholder = document.getElementById("navbarBrand");
+        const rect = brandPlaceholder.getBoundingClientRect();
+        gsap.to("#sigmach", {
+          duration: 1.5,
+          top: rect.top + 42.5,
+          left: rect.left + 75.55,
+          fontSize: "1.5rem",
+          ease: "power2.out",
+          onComplete: () => {
+            gsap.to("#sigmach", { opacity: 0, duration: 0.3 });
+            gsap.to("#navbarBrand", { opacity: 1, duration: 0.3 });
+            gsap.to(".page", { opacity: 1, duration: 1, ease: "power2.out" });
+          }
+        });
+      }
+    });
+  </script>
+  
+  <!-- Learn More Button Scroll Script -->
+  <script>
+    document.getElementById("learn-more").addEventListener("click", function() {
+      const targetH1 = document.querySelector("#compound-section .content-overlay .left-box h1");
+      const offset = 150;
+      const targetPosition = targetH1.getBoundingClientRect().top + window.pageYOffset - offset;
+      window.scrollTo({
+        top: targetPosition,
+        behavior: 'smooth'
+      });
+    });
+  </script>
+  
+  <!-- Compound Molecule Animation Script -->
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const compoundSection = document.getElementById("compound-section");
+      const compoundImages = ["dopamine.jpg", "testosterone.jpg", "seretonin.jpg", "tnt.jpg", "glucose.jpg"];
+      function createCompoundImage() {
+        const img = document.createElement("img");
+        img.src = "images/" + compoundImages[Math.floor(Math.random() * compoundImages.length)];
+        img.classList.add("compound-image");
+        img.style.top = Math.random() * 100 + "%";
+        img.style.left = Math.random() * 100 + "%";
+        compoundSection.appendChild(img);
+        gsap.to(img, {
+          opacity: 0.6, 
+          duration: 2, 
+          ease: "power2.inOut",
+          onComplete: () => {
+            gsap.to(img, {
+              opacity: 0,
+              duration: 2,
+              ease: "power2.out",
+              onComplete: () => img.remove()
+            });
+          }
+        });
+      }
+      setInterval(createCompoundImage, 200);
+      window.addEventListener("scroll", () => {
+        let scrollY = window.scrollY;
+        gsap.to(".compound-image", {
+          y: scrollY * 0.2,
+          ease: "power1.out"
+        });
+      });
+    });
+  </script>
+  
+  <!-- Intersection Observer for Compound Section Boxes Animation -->
+  <script>
+    document.addEventListener("DOMContentLoaded", function(){
+      const contentOverlay = document.querySelector("#compound-section .content-overlay");
+      if(contentOverlay) {
+        const leftBox = contentOverlay.querySelector(".left-box");
+        const rightBox = contentOverlay.querySelector(".right-box");
+        const leftSpans = leftBox.querySelectorAll("h1 span");
+        const observer = new IntersectionObserver((entries, observer) => {
+          entries.forEach(entry => {
+            if(entry.isIntersecting){
+              setTimeout(() => {
+                gsap.to(leftBox, { x: 0, opacity: 1, duration: 2.5, ease: "power2.out" });
+                gsap.to(rightBox, { x: 0, opacity: 1, duration: 2.5, ease: "power2.out", delay: 0.5, onComplete: () => {
+                  gsap.to(leftSpans, { opacity: 1, duration: 1.5, stagger: 0.5, ease: "power2.out" });
+                }});
+              }, 500);
+              observer.unobserve(contentOverlay);
+            }
+          });
+        }, { threshold: 0.5 });
+        observer.observe(contentOverlay);
+      }
+    });
+  </script>
+  
+  <!-- Bootstrap JS and dependencies -->
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  
+  <!-- Payment Modal & Form Scripts -->
+  <script>
+    // --- Cart Handling Code ---
+    function loadCart() {
+      var cart = localStorage.getItem("cart") ? JSON.parse(localStorage.getItem("cart")) : [];
+      var cartHtml = "";
+      var total = 0;
+      
+      cart.forEach(function(item, index) {
+        cartHtml += `<div class="cart-item" data-index="${index}">
+                      <h5>${item.product}</h5>
+                      <p>Price: $${item.price} | Quantity: ${item.quantity}</p>
+                      <button class="btn btn-danger remove-btn" data-index="${index}">Remove</button>
+                    </div>`;
+        total += item.price * item.quantity;
+      });
+      
+      $("#cart-items").html(cartHtml);
+      $("#cart-total").text(total.toFixed(2));
+    }
+    
+    function removeItem(index) {
+      let cart = localStorage.getItem("cart") ? JSON.parse(localStorage.getItem("cart")) : [];
+      cart.splice(index, 1);
+      localStorage.setItem("cart", JSON.stringify(cart));
+    }
+    
+    $(document).ready(function() {
+      loadCart();
+      
+      $(document).on("click", ".remove-btn", function() {
+        var index = $(this).data("index");
+        var $item = $(this).closest(".cart-item");
+        var height = $item.outerHeight(true);
+        var $siblings = $item.nextAll(".cart-item");
+        gsap.timeline({
+          onComplete: function() {
+            removeItem(index);
+            loadCart();
+          }
+        })
+        .to($item, { duration: 0.5, opacity: 0, x: 100, ease: "power1.in" })
+        .to($siblings, { duration: 0.5, y: "-=" + height, ease: "power1.out" }, "<");
+      });
+      
+      $("#checkout").click(function() {
+        // Autofill stored info when opening modal (if available)
+        const stored = localStorage.getItem("userInfo");
+        if (stored) {
+          const info = JSON.parse(stored);
+          app.cardName = info.cardName || "";
+          app.cardNumber = info.cardNumber || "";
+          app.cardMonth = info.cardMonth || "";
+          app.cardYear = info.cardYear || "";
+          app.cardCvv = info.cardCvv || "";
+          app.shippingAddress = info.shippingAddress || "";
+          app.shippingCity = info.shippingCity || "";
+          app.shippingState = info.shippingState || "";
+          app.shippingZip = info.shippingZip || "";
+        }
+        gsap.to("#credit-card-modal-overlay", {duration: 0.5, autoAlpha: 1, display:"flex"});
+      });
+      
+      $("#credit-card-modal-overlay, #close-modal").click(function(e) {
+        if (e.target === this || e.target.id === "close-modal") {
+          gsap.to("#credit-card-modal-overlay", {duration: 0.5, autoAlpha: 0, display:"none"});
+        }
+      });
+    });
+  </script>
+  
+  <!-- Vue Credit Card Form with Autofill, Validation, and Action Buttons -->
+  <script>
+    // Simulated login state (set to false for demonstration)
+    var userLoggedIn = false;
+    
+    var app = new Vue({
+      el: "#app",
+      data() {
+        return {
+          loggedIn: userLoggedIn,
+          cardName: "",
+          cardNumber: "",
+          cardMonth: "",
+          cardYear: "",
+          cardCvv: "",
+          shippingAddress: "",
+          shippingCity: "",
+          shippingState: "",
+          shippingZip: ""
+        };
+      },
+      methods: {
+        validateForm() {
+          // Simple validation: check required fields
+          if (!this.cardNumber || !this.cardName || !this.cardMonth || !this.cardYear || !this.cardCvv) {
+            alert("Please fill in all credit card fields.");
+            return false;
+          }
+          if (!this.shippingAddress || !this.shippingCity || !this.shippingState || !this.shippingZip) {
+            alert("Please fill in your shipping address.");
+            return false;
+          }
+          // Additional validation (length, numeric, etc.) can be added here.
+          return true;
+        },
+        submitPayment() {
+          if (!this.validateForm()) return;
+          // Save user info for autofill next time
+          localStorage.setItem("userInfo", JSON.stringify({
+            cardName: this.cardName,
+            cardNumber: this.cardNumber,
+            cardMonth: this.cardMonth,
+            cardYear: this.cardYear,
+            cardCvv: this.cardCvv,
+            shippingAddress: this.shippingAddress,
+            shippingCity: this.shippingCity,
+            shippingState: this.shippingState,
+            shippingZip: this.shippingZip
+          }));
+          alert("Payment submitted!\n" +
+                "Card Number: " + this.cardNumber + "\n" +
+                "Card Holder: " + this.cardName + "\n" +
+                "Expires: " + (this.cardMonth || "MM") + "/" + (this.cardYear ? String(this.cardYear).slice(2,4) : "YY") +
+                "\nCVV: " + this.cardCvv +
+                "\nShipping Address: " + this.shippingAddress + ", " + this.shippingCity + ", " + this.shippingState + " " + this.shippingZip);
+          gsap.to("#credit-card-modal-overlay", {duration: 0.5, autoAlpha: 0, display:"none"});
+        },
+        login() {
+          alert("Redirecting to login page...");
+          window.location.href = "login.html";
+        }
+      }
+    });
+  </script>
+  
+</body>
+</html>

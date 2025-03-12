@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sigma Chem - Cart</title>
+  <!-- Bootstrap CSS & Google Fonts -->
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600&display=swap" rel="stylesheet" />
+  <style>
+    /* --- Global Styles --- */
+    body {
+      background-color: #000;
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      padding: 0;
+      color: white;
+    }
+    .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+        }
+        .navbar-brand, .navbar .nav-link {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: white;
+            text-decoration: none;
+        }
+    
+    .navbar img {
+      background: transparent !important;
+    }
+    .content-container {
+      padding-top: 80px;
+      margin-top: 20px;
+    }
+    /* Cart Item Styles */
+    .cart-item {
+      border: 1px solid #ddd;
+      padding: 15px;
+      border-radius: 10px;
+      background-color: white;
+      margin-bottom: 10px;
+      color: black;
+      position: relative;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .cart-item div {
+      flex: 1;
+    }
+    .cart-item-image {
+      width: 80px;
+      height: auto;
+      margin-left: 15px;
+      border-radius: 5px;
+      object-fit: cover;
+    }
+    .remove-btn {
+      margin-top: 10px;
+    }
+    #cart-items {
+      overflow: hidden;
+    }
+    /* --- Payment Modal Overlay --- */
+    #credit-card-modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(5px);
+      display: none;
+      z-index: 1200;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    /* --- Payment Modal Window --- */
+    #credit-card-modal {
+      background: #fff;
+      border-radius: 10px;
+      width: 90%;
+      max-width: 600px;
+      max-height: 70vh;
+      padding: 30px;
+      color: #707070;
+      position: relative;
+      overflow-y: auto;
+      font-weight: 600;
+    }
+    /* Close Button */
+    #credit-card-modal .close-btn {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      width: 35px;
+      height: 35px;
+      border-radius: 50%;
+      background: #333;
+      color: #fff;
+      border: none;
+      font-size: 1.2rem;
+      cursor: pointer;
+      z-index: 2;
+    }
+    /* Payment Title */
+    #credit-card-modal .payment-title {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    #credit-card-modal .payment-title h1 {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+    }
+    /* --- Credit Card Design --- */
+    #credit-card-modal .card {
+      position: relative;
+      width: 100%;
+      max-width: 500px;
+      height: 260px;
+      border-radius: 10px;
+      color: #fff;
+      padding: 15px;
+      margin: 0 auto 20px auto;
+      overflow: hidden;
+      background: linear-gradient(135deg, #e0e0e0, #f5f5f5, #e0e0e0);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    }
+    #credit-card-modal .card-bg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0.9;
+      border-radius: 10px;
+      z-index: 1;
+    }
+    /* Chip */
+    #credit-card-modal .card-chip {
+      position: absolute;
+      top: 15px;
+      left: 15px;
+      z-index: 2;
+    }
+    #credit-card-modal .card-chip img {
+      width: 40px;
+    }
+    /* Card Number */
+    #credit-card-modal .card-number {
+      font-size: 1.5rem;
+      letter-spacing: 2px;
+      margin-top: 70px;
+      position: relative;
+      z-index: 2;
+    }
+    /* Card Holder & Expiration */
+    #credit-card-modal .card-holder,
+    #credit-card-modal .card-expiration {
+      margin-top: 10px;
+      font-size: 0.9rem;
+      position: relative;
+      z-index: 2;
+    }
+    #credit-card-modal .card-holder span,
+    #credit-card-modal .card-expiration span {
+      font-size: 0.8rem;
+      opacity: 0.8;
+    }
+    /* --- Payment Form Layout --- */
+    #credit-card-modal .card-form {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-gap: 15px;
+      margin: 0 auto 20px auto;
+    }
+    #credit-card-modal .card-form input {
+      width: 100%;
+      padding: 12px;
+      font-size: 16px;
+      border-radius: 5px;
+      border: 1px solid #dcdcdc;
+      font-family: 'Poppins', sans-serif;
+    }
+    /* Full-width inputs */
+    #credit-card-modal .card-form .full-width {
+      grid-column: 1 / -1;
+    }
+    /* Arrange Card Number and CVV on same row */
+    #credit-card-modal .card-form .row {
+      display: grid;
+      grid-template-columns: 3fr 1fr;
+      grid-gap: 15px;
+      grid-column: 1 / -1;
+    }
+    /* Shipping Address Section */
+    #credit-card-modal .shipping-address {
+      margin-top: 15px;
+    }
+    #credit-card-modal .shipping-address h5 {
+      margin-bottom: 10px;
+      font-size: 1.1rem;
+    }
+    #credit-card-modal .shipping-address input {
+      width: 100%;
+      padding: 12px;
+      font-size: 16px;
+      border-radius: 5px;
+      border: 1px solid #dcdcdc;
+      font-family: 'Poppins', sans-serif;
+    }
+    /* Action Buttons */
+    #credit-card-modal .action-buttons {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 20px;
+    }
+    #credit-card-modal .guest-btn {
+      background: #000;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      padding: 10px 20px;
+      font-size: 18px;
+      cursor: pointer;
+      font-family: 'Poppins', sans-serif;
+    }
+    #credit-card-modal .login-btn {
+      background: #2364d2;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      padding: 10px 20px;
+      font-size: 18px;
+      cursor: pointer;
+      font-family: 'Poppins', sans-serif;
+    }
+    .navbar-brand, .navbar .nav-link {
+      font-family: "Poppins", serif;
+       font-weight: 700;
+   font-style: normal;
+  color: white;
+    }
+  </style>
+  <link rel="icon" type="image/jpeg" href="images/favicon.svg">
+</head>
+<body>
+  
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <a class="navbar-brand" href="main.html">SigmaChem</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" 
+      aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav">
+        <li class="nav-item"><a class="nav-link" href="products.html">Products</a></li>
+        <li class="nav-item"><a class="nav-link" href="team.html">Meet The Team</a></li>
+        <li class="nav-item"><a class="nav-link" href="careers.html">Careers</a></li>
+      </ul>
+      <ul class="navbar-nav ml-auto">
+      </ul>
+    </div>
+  </nav>
+  
+  <!-- Main Cart Content -->
+  <div class="container content-container">
+    <h2 class="text-center">My Cart</h2>
+    <div id="cart-items"></div>
+    <div class="text-right">
+      <h4>Total: $<span id="cart-total">0.00</span></h4>
+      <button class="btn btn-primary" id="checkout">Proceed to Checkout</button>
+    </div>
+  </div>
+
+  <!-- Payment Modal (hidden by default) -->
+  <div id="credit-card-modal-overlay">
+    <div id="credit-card-modal">
+      <button class="close-btn" id="close-modal">×</button>
+      <div class="payment-title">
+        <h1>Payment Information</h1>
+      </div>
+      <!-- Vue-powered Credit Card Form -->
+      <div id="app">
+        <!-- Simplified Card Design -->
+        <div class="card">
+          <img src="images/card-bg.jpg" alt="Card Background" class="card-bg" />
+          <div class="card-chip">
+            <img src="images/chip.svg" alt="Chip" />
+          </div>
+          <div class="card-number">{{ cardNumber || "#### #### #### ####" }}</div>
+          <div class="card-holder">
+            <span>Card Holder</span>
+            <div>{{ cardName || "FULL NAME" }}</div>
+          </div>
+          <div class="card-expiration">
+            <span>Expires</span>
+            <div>{{ cardMonth || "MM" }}/{{ cardYear ? String(cardYear).slice(2,4) : "YY" }}</div>
+          </div>
+        </div>
+        <!-- Payment Form -->
+        <div class="card-form">
+          <!-- Row: Card Number and CVV -->
+          <div class="row">
+            <input type="text" v-model="cardNumber" placeholder="Card Number" />
+            <input type="text" v-model="cardCvv" placeholder="CVV" />
+          </div>
+          <div class="row">
+          <!-- Row: Card Holder (Full Width) -->
+          <input type="text" v-model="cardName" placeholder="Card Holder" class="full-width" />
+          <!-- Row: Expiration Date -->
+        </div>
+          <div class="row">
+            <input type="text" v-model="cardMonth" placeholder="Exp. Month" />
+            <input type="text" v-model="cardYear" placeholder="Exp. Year" />
+          </div>
+        </div>
+        <!-- Shipping Address Section -->
+        <div class="shipping-address">
+          <h5>Shipping Address</h5>
+          <input type="text" v-model="shippingAddress" placeholder="Street Address" />
+          <input type="text" v-model="shippingCity" placeholder="City" />
+          <input type="text" v-model="shippingState" placeholder="State/Province" />
+          <input type="text" v-model="shippingZip" placeholder="Zip/Postal Code" />
+        </div>
+        <!-- Action Buttons -->
+        <div class="action-buttons">
+          <button class="guest-btn" @click="submitPayment">Checkout as Guest</button>
+          <button class="login-btn" v-if="!loggedIn" @click="login">Login</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- GSAP Dependency -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.5/gsap.min.js"></script>
+  <!-- jQuery and Bootstrap JS -->
+  <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <!-- Vue.js (from CDN) -->
+  <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+  
+  <script>
+    // Mapping from product names to image sources
+    const imageMap = {
+      "Luck Bomb Kit": "images/luckpotion.jpeg",
+      "Love Bomb Kit": "images/lovepotion.jpeg"
+      // Add additional mappings as needed
+    };
+    
+    function loadCart() {
+      var cart = localStorage.getItem("cart") ? JSON.parse(localStorage.getItem("cart")) : [];
+      var cartHtml = "";
+      var total = 0;
+      
+      cart.forEach(function(item, index) {
+        // Use a mapped image source if available, otherwise a placeholder
+        const imgSrc = imageMap[item.product] || "images/placeholder.jpg";
+        cartHtml += `<div class="cart-item" data-index="${index}">
+                      <div>
+                        <h5>${item.product}</h5>
+                        <p>Price: $${item.price} | Quantity: ${item.quantity}</p>
+                        <button class="btn btn-danger remove-btn" data-index="${index}">Remove</button>
+                      </div>
+                      <img src="${imgSrc}" alt="${item.product}" class="cart-item-image">
+                    </div>`;
+        total += item.price * item.quantity;
+      });
+      
+      $("#cart-items").html(cartHtml);
+      $("#cart-total").text(total.toFixed(2));
+    }
+    
+    function removeItem(index) {
+      let cart = localStorage.getItem("cart") ? JSON.parse(localStorage.getItem("cart")) : [];
+      cart.splice(index, 1);
+      localStorage.setItem("cart", JSON.stringify(cart));
+    }
+    
+    $(document).ready(function() {
+      loadCart();
+      
+      $(document).on("click", ".remove-btn", function() {
+        var index = $(this).data("index");
+        var $item = $(this).closest(".cart-item");
+        var height = $item.outerHeight(true);
+        var $siblings = $item.nextAll(".cart-item");
+        gsap.timeline({
+          onComplete: function() {
+            removeItem(index);
+            loadCart();
+          }
+        })
+        .to($item, { duration: 0.5, opacity: 0, x: 100, ease: "power1.in" })
+        .to($siblings, { duration: 0.5, y: "-=" + height, ease: "power1.out" }, "<");
+      });
+      
+      $("#checkout").click(function() {
+        // Autofill stored info when opening modal (if available)
+        const stored = localStorage.getItem("userInfo");
+        if (stored) {
+          const info = JSON.parse(stored);
+          app.cardName = info.cardName || "";
+          app.cardNumber = info.cardNumber || "";
+          app.cardMonth = info.cardMonth || "";
+          app.cardYear = info.cardYear || "";
+          app.cardCvv = info.cardCvv || "";
+          app.shippingAddress = info.shippingAddress || "";
+          app.shippingCity = info.shippingCity || "";
+          app.shippingState = info.shippingState || "";
+          app.shippingZip = info.shippingZip || "";
+        }
+        gsap.to("#credit-card-modal-overlay", {duration: 0.5, autoAlpha: 1, display:"flex"});
+      });
+      
+      $("#credit-card-modal-overlay, #close-modal").click(function(e) {
+        if (e.target === this || e.target.id === "close-modal") {
+          gsap.to("#credit-card-modal-overlay", {duration: 0.5, autoAlpha: 0, display:"none"});
+        }
+      });
+    });
+  </script>
+  
+  <!-- Vue Credit Card Form with Autofill, Validation, and Action Buttons -->
+  <script>
+    // Simulated login state (set to false for demonstration)
+    var userLoggedIn = false;
+    
+    var app = new Vue({
+      el: "#app",
+      data() {
+        return {
+          loggedIn: userLoggedIn,
+          cardName: "",
+          cardNumber: "",
+          cardMonth: "",
+          cardYear: "",
+          cardCvv: "",
+          shippingAddress: "",
+          shippingCity: "",
+          shippingState: "",
+          shippingZip: ""
+        };
+      },
+      methods: {
+        validateForm() {
+          // Simple validation: check required fields
+          if (!this.cardNumber || !this.cardName || !this.cardMonth || !this.cardYear || !this.cardCvv) {
+            alert("Please fill in all credit card fields.");
+            return false;
+          }
+          if (!this.shippingAddress || !this.shippingCity || !this.shippingState || !this.shippingZip) {
+            alert("Please fill in your shipping address.");
+            return false;
+          }
+          return true;
+        },
+        submitPayment() {
+          if (!this.validateForm()) return;
+          // Save user info for autofill next time
+          localStorage.setItem("userInfo", JSON.stringify({
+            cardName: this.cardName,
+            cardNumber: this.cardNumber,
+            cardMonth: this.cardMonth,
+            cardYear: this.cardYear,
+            cardCvv: this.cardCvv,
+            shippingAddress: this.shippingAddress,
+            shippingCity: this.shippingCity,
+            shippingState: this.shippingState,
+            shippingZip: this.shippingZip
+          }));
+          alert("Payment submitted!\n" +
+                "Card Number: " + this.cardNumber + "\n" +
+                "Card Holder: " + this.cardName + "\n" +
+                "Expires: " + (this.cardMonth || "MM") + "/" + (this.cardYear ? String(this.cardYear).slice(2,4) : "YY") +
+                "\nCVV: " + this.cardCvv +
+                "\nShipping Address: " + this.shippingAddress + ", " + this.shippingCity + ", " + this.shippingState + " " + this.shippingZip);
+          gsap.to("#credit-card-modal-overlay", {duration: 0.5, autoAlpha: 0, display:"none"});
+        },
+        login() {
+          alert("Redirecting to login page...");
+          window.location.href = "login.html";
+        }
+      }
+    });
+  </script>
+  
+  <!-- Bootstrap JS and dependencies -->
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

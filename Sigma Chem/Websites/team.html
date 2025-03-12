@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Meet the Team</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet" />
+  <!-- GSAP from CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <!-- Poppins Font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&display=swap" rel="stylesheet" />
+
+  <style>
+    /* Global Styles */
+    body {
+      background-color: #000;
+      font-family: 'Poppins', sans-serif;
+      color: white;
+      margin: 0;
+      padding: 0;
+      position: relative;
+      min-height: 100vh;
+    }
+    /* Semi-opaque Background Image */
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: url('images/groupphoto.webp') no-repeat center center/cover;
+      opacity: 0.3;
+      z-index: -1;
+    }
+    /* Navbar */
+    .navbar {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 1000;
+    }
+    .navbar-brand, .navbar .nav-link {
+      font-weight: 700;
+      font-size: 1.5rem;
+      color: white !important;
+    }
+    .navbar img {
+      background: transparent !important;
+    }
+    /* Main container */
+    .team-container {
+      padding-top: 100px; /* leave space for navbar */
+      padding-bottom: 50px;
+    }
+    .team-container h1 {
+      margin-bottom: 40px;
+      text-align: center;
+      font-size: 2.5rem;
+    }
+    /* Team Member Row */
+    .team-row {
+      display: flex;
+      flex-wrap: wrap;
+      margin-bottom: 40px;
+      align-items: center;
+      border: 2px solid white;
+      border-radius: 10px;
+      overflow: hidden;
+      background-color: #111;
+    }
+    /* Left column for image */
+    .team-row .team-img {
+      flex: 0 0 40%;
+      max-width: 40%;
+    }
+    .team-row .team-img img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+    /* Right column for text */
+    .team-row .team-text {
+      flex: 0 0 60%;
+      max-width: 60%;
+      padding: 20px;
+      box-sizing: border-box;
+      font-size: 1.2rem;
+    }
+    .team-row .team-text h2 {
+      font-size: 2rem;
+      margin-bottom: 15px;
+    }
+    /* Video Button Styling */
+    #video-btn {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: white;
+      color: black;
+      padding: 15px 30px;
+      border-radius: 5px;
+      font-size: 1.2rem;
+      z-index: 1100;
+      transition: background-color 0.3s;
+      border: 2px solid white;
+    }
+    #video-btn:hover {
+      background-color: #0056b3;
+      color: white;
+    }
+    /* Overlay for video */
+    #video-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.8);
+      z-index: 1200;
+      display: none;
+      justify-content: center;
+      align-items: center;
+      transition: opacity 0.3s ease;
+      overflow: hidden;
+    }
+    #video-overlay.show {
+      display: flex;
+    }
+    #video-overlay video {
+      max-width: 80%;
+      max-height: 80%;
+      object-fit: cover;
+    }
+    /* Close Button Styling */
+    #close-btn {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background-color: #333;
+      color: white;
+      padding: 10px 15px;
+      font-size: 1.5rem;
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+      z-index: 1300;
+    }
+    #close-btn:hover {
+      background-color: #555;
+    }
+  </style>
+</head>
+<body>
+  <!-- Video Button -->
+  <button id="video-btn">Watch Our Sigmas in Action</button>
+
+  <!-- Video Overlay -->
+  <div id="video-overlay">
+    <button id="close-btn">&times;</button>
+    <video id="video-player" autoplay controls>
+      <source src="videos/trailervideo.mp4" type="video/mp4">
+      Your browser does not support the video tag.
+    </video>
+  </div>
+
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <a class="navbar-brand" href="main.html">SigmaChem</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" 
+            data-target="#navbarNav" aria-controls="navbarNav" 
+            aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav">
+        <li class="nav-item"><a class="nav-link" href="products.html">Products</a></li>
+        <li class="nav-item"><a class="nav-link" href="team.html">Meet The Team</a></li>
+        <li class="nav-item"><a class="nav-link" href="careers.html">Careers</a></li>
+        <li class="nav-item"><a class="nav-link" href="cart.html"><img src="images/cart-icon.svg" alt="Cart" width="40"></a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Main Container -->
+  <div class="container team-container">
+    <h1>Meet the Team</h1>
+    
+    <!-- Harrison Row -->
+    <div class="team-row">
+      <div class="team-img">
+        <img src="images/buffharrison.webp" alt="Harrison Kayal">
+      </div>
+      <div class="team-text">
+        <h2>Harrison Kayal</h2>
+        <p>Harrison Kayal is our lead researcher with expertise in molecular synthesis and breakthrough product development. His innovative spirit drives our scientific success.</p>
+      </div>
+    </div>
+    
+    <!-- Ryan Row -->
+    <div class="team-row">
+      <div class="team-img">
+        <img src="images/fatryan.webp" alt="Ryan Presson">
+      </div>
+      <div class="team-text">
+        <h2>Ryan Presson</h2>
+        <p>Ryan Presson is our creative strategist who brings fresh ideas and keeps the team on track with his dynamic leadership and project management skills.</p>
+      </div>
+    </div>
+    
+    <!-- Liam Row -->
+    <div class="team-row">
+      <div class="team-img">
+        <img src="images/skinnyliam.webp" alt="Liam Tubbs">
+      </div>
+      <div class="team-text">
+        <h2>Liam Tubbs</h2>
+        <p>Liam Tubbs is our technical expert. His deep understanding of engineering and software makes him the backbone of our operations, ensuring flawless performance.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- GSAP Stagger Animation -->
+  <script>
+    window.addEventListener("load", () => {
+      gsap.from(".team-row", {
+        duration: 1,
+        opacity: 0,
+        y: 50,
+        stagger: 0.3,
+        ease: "power2.out"
+      });
+    });
+  </script>
+
+  <!-- Button and Overlay Logic -->
+  <script>
+    document.getElementById("video-btn").addEventListener("click", function() {
+      // Show the video overlay
+      document.getElementById("video-overlay").classList.add("show");
+      // Pause the video if the overlay is already open
+      var video = document.getElementById("video-player");
+      video.play();
+    });
+
+    // Close the video overlay when the close button is clicked
+    document.getElementById("close-btn").addEventListener("click", function() {
+      document.getElementById("video-overlay").classList.remove("show");
+      var video = document.getElementById("video-player");
+      video.pause(); // Pause the video when closed
+    });
+
+    // Close the video overlay when the video ends
+    document.getElementById("video-player").addEventListener("ended", function() {
+      document.getElementById("video-overlay").classList.remove("show");
+    });
+  </script>
+
+  <!-- Bootstrap JS and dependencies -->
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

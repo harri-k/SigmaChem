@@ -162,11 +162,19 @@
   <!-- Video Overlay -->
   <div id="video-overlay">
     <button id="close-btn">&times;</button>
-    <video id="video-player" autoplay controls>
-      <source src="videos/trailervideo.mp4" type="video/mp4">
-      Your browser does not support the video tag.
-    </video>
+    <iframe id="video-player" width="80%" height="80%" src="https://www.youtube.com/embed/EYLoyjPAaPI?autoplay=1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
   </div>
+  
+  <!-- Button and Overlay Logic -->
+  <script>
+    document.getElementById("video-btn").addEventListener("click", function() {
+      document.getElementById("video-overlay").classList.add("show");
+    });
+  
+    document.getElementById("close-btn").addEventListener("click", function() {
+      document.getElementById("video-overlay").classList.remove("show");
+    });
+  </script>
 
   <!-- Navbar -->
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
